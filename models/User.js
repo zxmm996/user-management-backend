@@ -24,19 +24,17 @@ userSchema.statics.addUser = function(payload, callback){
 	//⑤ 持久化，在数据库中保存
 	user.save(function(err,result){
 		if(err){
-			console.log("保存失败");
+			console.log("添加用户失败");
 			return;
 		}
-		console.log("保存成功");
+		console.log("添加用户成功");
 		callback(err, result);
 	});
 }
 
 // 根据userId 修改用户信息
 userSchema.statics.updateUser = function(payload, callback) {
-	User.update({ _id: payload.userId }, payload, function(err, result) {
-		callback(err, result)
-	});
+	User.update({ _id: payload.userId }, payload, callback);
 }
 
 // 获取用户列表
@@ -44,17 +42,30 @@ userSchema.statics.getUserList = function(callback) {
 	User.find(null, callback);
 }
 
+// 分页获取用户数据
+userSchema.statics.getUserListByPage = function(payload, callback) {
+	const { page, pageSize } = payload;
+	User.find(null, null, { skip: pageSize * (page - 1), limit: pageSize }, function(err, result) {
+		User.count(null, function(err, count) {
+			if (err) {
+				console.log('get count error');
+			} else {
+				callback(err, result, count);
+			}
+		})
+	});
+}
 // 根据用户id获取用户信息
 userSchema.statics.getUserInfoById = function(userId, callback) {
-	User.find({ _id: userId }, function(err, result) {
-		callback(err, result)
-	});
+	User.find({ _id: userId }, callback);
 }
 
 // 删除用户
 userSchema.statics.deleteUser = function(userId, callback) {
 	User.deleteOne({ _id: userId }, callback);
 }
+
+// 用户登录校验
 userSchema.statics.checkUser = function(payload, callback) {
 	User.find({
 		userName: payload.userName,

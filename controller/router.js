@@ -1,6 +1,12 @@
 var db = require("../models/db.js");
 var Formidable = require('formidable');
-var dataCode = require('../uitl/dataCOde.js');
+var dataCode = require('../uitl/dataCode.js');
+var CircularJSON = require('circular-json');
+const {
+	error,
+	success,
+	paramsError,
+} = dataCode;
 
 exports.login = function(req, res) {
 	const form = new Formidable.IncomingForm();
@@ -13,16 +19,16 @@ exports.login = function(req, res) {
 			password,
 		}, function(err, result) {
 			if (err) {
-				res.send(dataCode.error);
+				res.send(error);
 			} else {
 				if (result.length === 0) {
 					res.send({
-						...dataCode.success,
+						...success,
 						result: false,
 					});
 				} else {
 					res.send({
-						...dataCode.success,
+						...success,
 						result: result[0],
 					})
 				}
@@ -52,9 +58,12 @@ exports.addUser = function(req,res){
 			userPwd : userPwd,
 		},function(err,result){
 			if (err) {
-				res.send(dataCode.error);
+				res.send(error);
 			} else {
-				res.send(dataCode.success);
+				res.send({
+					...success,
+					result: true,
+				});
 			}
 		})
 	})
@@ -81,10 +90,10 @@ exports.updateUser = function(req, res) {
 			userPwd,
 		}, function(err, result) {
 			if (err) {
-				res.send(dataCode.error)
+				res.send(error)
 			} else {
 				res.send({
-					...dataCode.success,
+					...success,
 					result,
 				})
 			}
@@ -96,12 +105,36 @@ exports.updateUser = function(req, res) {
 exports.getUserList = function(req,res){
 	db.getUserList(function(err, result) {
 		if (err) {
-			res.send(dataCode.error);
+			res.send(error);
 		} else {
 			res.send({
-				...dataCode.success,
+				...success,
 				result,
+				total: result.length,
 			});
+		}
+	})
+}
+
+// 分页获取数据
+exports.getUserListByPage = function(req, res) {
+	const {
+		page,
+		pageSize,
+	} = req.query;
+	db.getUserListByPage({
+		page: parseInt(page, 10),
+		pageSize: parseInt(pageSize, 10),
+	}, function(err, result, count) {
+		console.log('count===', count);
+		if (err) {
+			res.send(error);
+		} else {
+			res.send({
+				...success,
+				result,
+				total: count,
+			})
 		}
 	})
 }
@@ -111,10 +144,10 @@ exports.getUserInfoById = function(req,res){
 	const userId = req.query.userId;
 	db.getUserInfoById(userId, function(err, result) {
 		if (err) {
-			res.send(dataCode.error);
+			res.send(error);
 		} else {
 			res.send({
-				...dataCode.success,
+				...success,
 				result,
 			});
 		}
@@ -126,13 +159,114 @@ exports.deleteUser = function(req,res){
 	const userId = req.query.userId;
 	db.deleteUser(userId, function(err, result) {
 		if (err) {
-			res.send(dataCode.error);
+			res.send(error);
 		} else {
 			res.send({
-				...dataCode.success,
-				result,
+				...success,
+				result: true,
 			});
 		}
 	})
 }
 
+// 添加组织机构
+exports.addOrganization = function(req, res) {
+	const form = new Formidable.IncomingForm();
+	form.parse(req, function(err, fields) {
+		const {
+			orgName,
+			orgType,
+			level,
+			pId,
+		} = fields;
+
+		db.addOrganization({
+			orgName,
+			orgType,
+			level: parseInt(level, 10),
+			pId,
+		}, function(err, result) {
+			if (err) {
+				res.send(error);
+			} else {
+				res.send({
+					...success,
+					result,
+				})
+			}
+		})
+	})
+}
+
+// 删除组织机构
+exports.deleteOrganization= function(req, res) {
+	const orgId = req.query.orgId;
+	db.deleteOrganization(orgId, function(err, result) {
+		if (err) {
+			res.send(error);
+		} else {
+			res.send({
+				...success,
+				result: true,
+			})
+		}
+	})
+}
+
+// 修改组织机构
+exports.updateOrganization = function(req, res) {
+	const form = new Formidable.IncomingForm();
+	form.parse(req, function(err, fields) {
+		const {
+			orgId,
+			orgName,
+			orgType,
+			level,
+			pId,
+		} = fields;
+		db.updateOrganization({
+			orgId,
+			orgName,
+			orgType,
+			level,
+			pId,
+		}, function(err, result) {
+			if (err) {
+				res.send(error);
+			} else {
+				res.send({
+					...success,
+					result,
+				})
+			}
+		})
+	})
+}
+
+// 获取机构列表
+exports.getOrgList = function(req, res) {
+	db.getOrgList(function(err, result) {
+		if (err) {
+			res.send(error);
+		} else {
+			res.send({
+				...success,
+				result,
+			})
+		}
+	})
+}
+// 获取机构树
+exports.getOrgTree = function(req, res) {
+	db.getOrgTree(function(err, result) {
+		if (err) {
+			res.send(error);
+		} else {
+			res.send({
+				...success,
+				// result: CircularJSON.stringify(result),
+				result,
+			})
+		}
+	})
+}

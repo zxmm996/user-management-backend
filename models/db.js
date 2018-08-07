@@ -8,8 +8,8 @@ mongoose.connect('mongodb://localhost:27017/service', {useNewUrlParser: true}, f
         console.log('连接成功');
     }
 });
-var db = mongoose.connection;
 var User = require('./User.js');
+var Organization = require('./Organization.js');
 
 exports.addUser = User.addUser;
 exports.getUserList = User.getUserList;
@@ -18,4 +18,10 @@ exports.getUserInfoById = User.getUserInfoById;
 exports.updateUser = User.updateUser;
 exports.deleteUser = User.deleteUser;
 exports.checkUser = User.checkUser;
+exports.getUserListByPage = User.getUserListByPage;
+exports.addOrganization = Organization.addOrganization;
+exports.deleteOrganization = Organization.deleteOrganization;
+exports.updateOrganization = Organization.updateOrganization;
+exports.getOrgList = Organization.getOrgList;
+exports.getOrgTree = Organization.getOrgTree;
 
