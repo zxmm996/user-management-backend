@@ -16,4 +16,6 @@ exports.getUserList = User.getUserList;
 exports.getUserInfoById = User.getUserInfoById;
 exports.getUserInfoById = User.getUserInfoById;
 exports.updateUser = User.updateUser;
+exports.deleteUser = User.deleteUser;
+exports.checkUser = User.checkUser;
 

@@ -32,19 +32,34 @@ userSchema.statics.addUser = function(payload, callback){
 	});
 }
 
+// 根据userId 修改用户信息
 userSchema.statics.updateUser = function(payload, callback) {
 	User.update({ _id: payload.userId }, payload, function(err, result) {
 		callback(err, result)
 	});
 }
 
+// 获取用户列表
 userSchema.statics.getUserList = function(callback) {
 	User.find(null, callback);
 }
+
+// 根据用户id获取用户信息
 userSchema.statics.getUserInfoById = function(userId, callback) {
 	User.find({ _id: userId }, function(err, result) {
-		callback(err, result[0])
+		callback(err, result)
 	});
+}
+
+// 删除用户
+userSchema.statics.deleteUser = function(userId, callback) {
+	User.deleteOne({ _id: userId }, callback);
+}
+userSchema.statics.checkUser = function(payload, callback) {
+	User.find({
+		userName: payload.userName,
+		userPwd: payload.password,
+	}, callback);
 }
 
 
