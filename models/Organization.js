@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-var Counter = mongoose.model('counter', counterSchema);
 // 定义模型
 var organizationSchema = mongoose.Schema({
 	orgName: String,

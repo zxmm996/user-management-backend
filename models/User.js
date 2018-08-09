@@ -23,11 +23,6 @@ userSchema.statics.addUser = function(payload, callback){
 	});
 	//⑤ 持久化，在数据库中保存
 	user.save(function(err,result){
-		if(err){
-			console.log("添加用户失败");
-			return;
-		}
-		console.log("添加用户成功");
 		callback(err, result);
 	});
 }

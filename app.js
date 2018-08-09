@@ -4,6 +4,14 @@ var router = require("./controller/router.js");
 
 
 //罗列路由中间件
+app.all('*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
+
 app.post("/login", router.login);
 app.post("/addUser", router.addUser);
 app.get("/getUserList", router.getUserList);
