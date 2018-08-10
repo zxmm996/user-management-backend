@@ -21,12 +21,22 @@ organizationSchema.statics.addOrganization = function(payload, callback) {
 
 // 删除机构
 organizationSchema.statics.deleteOrganization = function(orgId, callback) {
-	Organization.deleteOne({'_id': orgId}, callback);
+	Organization.find({ pId: orgId}, function(err, result) {
+		if (err) {
+			callback(err);
+		} else {
+			if (result.length > 0) {
+				callback(err, 2);
+			} else {
+				Organization.deleteOne({'_id': orgId}, callback);
+			}
+		}
+	})
 }
 
 // 修改机构
 organizationSchema.statics.updateOrganization = function(payload, callback) {
-	Organization.update({'_id': payload.orgId}, payload, callback);
+	Organization.findByIdAndUpdate(payload.orgId, { $set: { orgName: payload.orgName }}, callback)
 }
 
 // 查询组织机构列表
@@ -50,6 +60,11 @@ organizationSchema.statics.getOrgTree = function(callback) {
 		callback(err, result.filter(item => item.level === 0));
 		}
 	});
+}
+
+// 根据机构id获取机构详情
+organizationSchema.statics.getOrgInfoById = function(orgId, callback) {
+	Organization.findOne({_id: orgId}, callback);
 }
 
 var Organization = mongoose.model('organization', organizationSchema);

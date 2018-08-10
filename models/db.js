@@ -24,4 +24,5 @@ exports.deleteOrganization = Organization.deleteOrganization;
 exports.updateOrganization = Organization.updateOrganization;
 exports.getOrgList = Organization.getOrgList;
 exports.getOrgTree = Organization.getOrgTree;
+exports.getOrgInfoById = Organization.getOrgInfoById;
 

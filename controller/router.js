@@ -1,7 +1,7 @@
 var db = require("../models/db.js");
 var Formidable = require('formidable');
 var dataCode = require('../uitl/dataCode.js');
-var CircularJSON = require('circular-json');
+
 const {
 	error,
 	success,
@@ -183,7 +183,7 @@ exports.addOrganization = function(req, res) {
 		db.addOrganization({
 			orgName,
 			orgType,
-			level: parseInt(level, 10),
+			level: parseInt(level, 10) + 1,
 			pId,
 		}, function(err, result) {
 			if (err) {
@@ -204,6 +204,11 @@ exports.deleteOrganization= function(req, res) {
 	db.deleteOrganization(orgId, function(err, result) {
 		if (err) {
 			res.send(error);
+		} else if (result === 2){
+				res.send({
+				...success,
+				result: false,
+			})
 		} else {
 			res.send({
 				...success,
@@ -220,23 +225,17 @@ exports.updateOrganization = function(req, res) {
 		const {
 			orgId,
 			orgName,
-			orgType,
-			level,
-			pId,
 		} = fields;
 		db.updateOrganization({
 			orgId,
 			orgName,
-			orgType,
-			level,
-			pId,
 		}, function(err, result) {
 			if (err) {
 				res.send(error);
 			} else {
 				res.send({
 					...success,
-					result,
+					result: true,
 				})
 			}
 		})
@@ -256,6 +255,7 @@ exports.getOrgList = function(req, res) {
 		}
 	})
 }
+
 // 获取机构树
 exports.getOrgTree = function(req, res) {
 	db.getOrgTree(function(err, result) {
@@ -264,7 +264,21 @@ exports.getOrgTree = function(req, res) {
 		} else {
 			res.send({
 				...success,
-				// result: CircularJSON.stringify(result),
+				result,
+			})
+		}
+	})
+}
+
+// 根据机构id获取机构详情
+exports.getOrgInfoById = function(req, res) {
+	const orgId = req.query.orgId;
+	db.getOrgInfoById(orgId, function(err, result) {
+		if (err) {
+			res.send(error);
+		} else {
+			res.send({
+				...success,
 				result,
 			})
 		}

@@ -25,6 +25,7 @@ app.get("/deleteOrganization", router.deleteOrganization);
 app.post("/updateOrganization", router.updateOrganization);
 app.get("/getOrgList", router.getOrgList);
 app.get("/getOrgTree", router.getOrgTree);
+app.get("/getOrgInfoById", router.getOrgInfoById);
 
 
 
