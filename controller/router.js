@@ -42,20 +42,22 @@ exports.addUser = function(req,res){
 	//post参数 用formidable
 	var form = new Formidable.IncomingForm();
 	form.parse(req, function(err, fields) {
-		const userNm = fields.userNum;
+		const userNum = fields.userNum;
 		const userName = fields.userName;
 		const userGender = parseInt(fields.userGender, 10);
 		const userBirthday = fields.userBirthday;
-		const userRealName = fields.userRealName;
 		const userPwd = fields.userPwd;
+		const userOrgId = fields.userOrgId;
+		const userPhoneNum = fields.userPhoneNum;
 
 		db.addUser({
-			userNm : userNm,
-			userName : userName,
-			userGender : userGender,
-			userBirthday : userBirthday,
-			userRealName : userRealName,
-			userPwd : userPwd,
+			userNum,
+			userName,
+			userGender,
+			userBirthday,
+			userPwd,
+			userOrgId,
+			userPhoneNum,
 		},function(err,result){
 			if (err) {
 				res.send(error);
@@ -77,8 +79,9 @@ exports.updateUser = function(req, res) {
 		const userName = fields.userName;
 		const userGender = parseInt(fields.userGender, 10);
 		const userBirthday = fields.userBirthday;
-		const userRealName = fields.userRealName;
 		const userPwd = fields.userPwd;
+		const userOrgId = fields.userOrgId;
+		const userPhoneNum = fields.userPhoneNum;
 
 		db.updateUser({
 			userId,
@@ -86,8 +89,9 @@ exports.updateUser = function(req, res) {
 			userName,
 			userGender,
 			userBirthday,
-			userRealName,
 			userPwd,
+			userOrgId,
+			userPhoneNum,
 		}, function(err, result) {
 			if (err) {
 				res.send(error)

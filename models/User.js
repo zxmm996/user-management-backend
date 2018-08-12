@@ -1,14 +1,20 @@
 var mongoose = require("mongoose");
+var Schema = mongoose.Schema;
+var Organization = require("./Organization");
 
 var userSchema = mongoose.Schema({
 	userNum: String,
 	userName: String,
 	userGender: Number,
 	userBirthday: String,
-	userRealName: String,
 	userPwd: String,
+	userOrgId: String,
+	userPhoneNum: String,
+	userOrgName: {
+		type: String,
+		ref: 'organization',
+	},
 });
-
 
 // 静态方法，添加用户
 userSchema.statics.addUser = function(payload, callback){
@@ -18,8 +24,10 @@ userSchema.statics.addUser = function(payload, callback){
 		userName: payload.userName,
 		userGender: payload.userGender,
 		userBirthday: payload.userBirthday,
-		userRealName: payload.userRealName,
 		userPwd: payload.userPwd,
+		userOrgId: payload.userOrgId,
+		userPhoneNum: payload.userPhoneNum,
+		userOrgName: payload.userOrgId,
 	});
 	//⑤ 持久化，在数据库中保存
 	user.save(function(err,result){
@@ -40,19 +48,35 @@ userSchema.statics.getUserList = function(callback) {
 // 分页获取用户数据
 userSchema.statics.getUserListByPage = function(payload, callback) {
 	const { page, pageSize } = payload;
-	User.find(null, null, { skip: pageSize * (page - 1), limit: pageSize }, function(err, result) {
-		User.count(null, function(err, count) {
-			if (err) {
-				console.log('get count error');
-			} else {
-				callback(err, result, count);
-			}
-		})
-	});
+	User.find(null, null, { skip: pageSize * (page - 1), limit: pageSize })
+		.populate('userOrgName', 'orgName -_id')
+		.exec(function(err, result) {
+      	User.count(null, function(err, count) {
+					if (err) {
+						callback(err);
+					} else {
+						callback(err, result.map(doc => {
+							const docObject = doc.toObject();
+							return {
+								...docObject,
+								userOrgName: docObject.userOrgName.orgName,
+							}
+						}), count);
+					}
+				})
+    });
 }
 // 根据用户id获取用户信息
 userSchema.statics.getUserInfoById = function(userId, callback) {
-	User.find({ _id: userId }, callback);
+	User.findOne({ _id: userId })
+	.populate('userOrgName', 'orgName -_id')
+	.exec(function(err, result) {
+		const doc = result.toObject();
+		callback(err, {
+			...doc,
+			userOrgName: doc.userOrgName.orgName,
+		})
+	});
 }
 
 // 删除用户
