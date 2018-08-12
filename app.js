@@ -1,6 +1,6 @@
 var express = require("express");
 var app = express();
-var router = require("./controller/router.js");
+var router = require("./controller/controller.js");
 
 
 //罗列路由中间件

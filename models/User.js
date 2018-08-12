@@ -37,7 +37,16 @@ userSchema.statics.addUser = function(payload, callback){
 
 // 根据userId 修改用户信息
 userSchema.statics.updateUser = function(payload, callback) {
-	User.update({ _id: payload.userId }, payload, callback);
+	User.update({ _id: payload.userId }, {
+		userNum: payload.userNum,
+		userName: payload.userName,
+		userGender: payload.userGender,
+		userBirthday: payload.userBirthday,
+		userPwd: payload.userPwd,
+		userOrgId: payload.userOrgId,
+		userPhoneNum: payload.userPhoneNum,
+		userOrgName: payload.userOrgId,
+	}, callback);
 }
 
 // 获取用户列表
@@ -47,11 +56,15 @@ userSchema.statics.getUserList = function(callback) {
 
 // 分页获取用户数据
 userSchema.statics.getUserListByPage = function(payload, callback) {
-	const { page, pageSize } = payload;
-	User.find(null, null, { skip: pageSize * (page - 1), limit: pageSize })
+	const { orgId, page, pageSize } = payload;
+	let conditions = null;
+	if (orgId) {
+		conditions = { userOrgId: orgId };
+	}
+	User.find(conditions, null, { skip: pageSize * (page - 1), limit: pageSize })
 		.populate('userOrgName', 'orgName -_id')
 		.exec(function(err, result) {
-      	User.count(null, function(err, count) {
+      	User.countDocuments(null, function(err, count) {
 					if (err) {
 						callback(err);
 					} else {

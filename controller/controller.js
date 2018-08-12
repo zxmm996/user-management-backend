@@ -123,14 +123,15 @@ exports.getUserList = function(req,res){
 // 分页获取数据
 exports.getUserListByPage = function(req, res) {
 	const {
+		orgId,
 		page,
 		pageSize,
 	} = req.query;
 	db.getUserListByPage({
+		orgId,
 		page: parseInt(page, 10),
 		pageSize: parseInt(pageSize, 10),
 	}, function(err, result, count) {
-		console.log('count===', count);
 		if (err) {
 			res.send(error);
 		} else {
