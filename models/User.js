@@ -79,6 +79,7 @@ userSchema.statics.getUserListByPage = function(payload, callback) {
 				})
     });
 }
+
 // 根据用户id获取用户信息
 userSchema.statics.getUserInfoById = function(userId, callback) {
 	User.findOne({ _id: userId })
@@ -95,6 +96,11 @@ userSchema.statics.getUserInfoById = function(userId, callback) {
 // 删除用户
 userSchema.statics.deleteUser = function(userId, callback) {
 	User.deleteOne({ _id: userId }, callback);
+}
+
+// 批量删除用户
+userSchema.statics.deleteUsers = function(userIds, callback) {
+	User.remove({"_id": {$in: userIds}}, callback) 
 }
 
 // 用户登录校验

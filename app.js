@@ -18,6 +18,7 @@ app.get("/getUserList", router.getUserList);
 app.get("/getUserListByPage", router.getUserListByPage);
 app.get("/getUserInfoById", router.getUserInfoById);
 app.get("/deleteUser", router.deleteUser);
+app.get("/deleteUsers", router.deleteUsers);
 app.post("/updateUser", router.updateUser);
 
 app.post("/addOrganization", router.addOrganization);

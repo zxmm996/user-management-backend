@@ -8,6 +8,7 @@ const {
 	paramsError,
 } = dataCode;
 
+// 登录
 exports.login = function(req, res) {
 	const form = new Formidable.IncomingForm();
 	form.parse(req, function(err, fields) {
@@ -71,6 +72,7 @@ exports.addUser = function(req,res){
 	})
 }
 
+// 修改用户
 exports.updateUser = function(req, res) {
 	const form = new Formidable.IncomingForm();
 	form.parse(req, function(err, fields) {
@@ -105,7 +107,7 @@ exports.updateUser = function(req, res) {
 	})
 }
 
-// 查询用户
+// 获取所有用户
 exports.getUserList = function(req,res){
 	db.getUserList(function(err, result) {
 		if (err) {
@@ -163,6 +165,21 @@ exports.getUserInfoById = function(req,res){
 exports.deleteUser = function(req,res){
 	const userId = req.query.userId;
 	db.deleteUser(userId, function(err, result) {
+		if (err) {
+			res.send(error);
+		} else {
+			res.send({
+				...success,
+				result: true,
+			});
+		}
+	})
+}
+
+// 根据用户id批量删除用户
+exports.deleteUsers = function(req,res){
+	const userIds = req.query.userIds;
+	db.deleteUsers(userIds.split(';'), function(err, result) {
 		if (err) {
 			res.send(error);
 		} else {
