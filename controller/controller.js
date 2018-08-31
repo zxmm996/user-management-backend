@@ -9,7 +9,7 @@ const {
 } = dataCode;
 
 // 登录
-exports.login = function(req, res) {
+exports.login = function(req, res, next) {
 	const form = new Formidable.IncomingForm();
 	form.parse(req, function(err, fields) {
 		const userName = fields.userName;
@@ -28,7 +28,9 @@ exports.login = function(req, res) {
 						result: false,
 					});
 				} else {
-					res.send({
+					req.session.user = result[0];
+					res.status(200)
+						 .send({
 						...success,
 						result: result[0],
 					})
