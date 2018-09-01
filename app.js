@@ -10,7 +10,7 @@ var router = require("./controller/controller.js");
 app.use(cookieParser());
 app.use(session({
 	secret: 'HelloKitty',
-	cookie: { maxAge: 1000 * 30 }, //设置maxAge,session和相应的cookie失效过期
+	cookie: { maxAge: 1000 * 60 * 60 }, //设置maxAge,session和相应的cookie失效过期
 	resave: true,
 	saveUninitialized: true,
 	// store: new FileStore(),  // 本地存储session（文本文件，也可以选择其他store，比如redis的）
@@ -30,6 +30,11 @@ app.all('*', function(req, res, next) {
 });
 
 app.post("/login", router.login);
+app.get('/logout', function(req, res) {
+  req.session.destroy();
+  res.status(200)
+     .send('logout success');
+})
 
 app.all('*', function(req, res, next) {
    if (!req.session.user) {

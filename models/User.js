@@ -106,7 +106,7 @@ userSchema.statics.deleteUsers = function(userIds, callback) {
 // 用户登录校验
 userSchema.statics.checkUser = function(payload, callback) {
 	User.find({
-		userName: payload.userName,
+		userNum: payload.userName,
 		userPwd: payload.password,
 	}, callback);
 }
