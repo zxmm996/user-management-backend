@@ -16,7 +16,7 @@ app.use(session({
 	// store: new FileStore(),  // 本地存储session（文本文件，也可以选择其他store，比如redis的）
 }));
 
-//罗列路由中间件
+// 允许跨域设置
 app.all('*', function(req, res, next) {
 		// 设置允许跨域携带cookie
     res.header("Access-Control-Allow-Credentials", true);
