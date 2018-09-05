@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var app = express();
 var router = require("./controller/controller.js");
 
-
+// session设置
 app.use(cookieParser());
 app.use(session({
 	secret: 'HelloKitty',
@@ -22,7 +22,7 @@ app.all('*', function(req, res, next) {
     res.header("Access-Control-Allow-Credentials", true);
     // 设置允许跨域携带cookie后
     // Access-Control-Allow-Origin不可以为 '*'，因为 '*' 会和 Access-Control-Allow-Credentials:true 冲突，需配置指定的地址
-    res.header("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.header("Access-Control-Allow-Origin", "http://192.168.19.84:8080");
     res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     res.header('Access-Control-Allow-Headers', 'Content-Type');
@@ -60,5 +60,5 @@ app.get("/getOrgList", router.getOrgList);
 app.get("/getOrgTree", router.getOrgTree);
 app.get("/getOrgInfoById", router.getOrgInfoById);
 
-app.listen(3000, '0.0.0.0');
+app.listen(3000, '192.168.19.84');
 console.log('server running on port 3000')
