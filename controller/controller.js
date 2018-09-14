@@ -1,5 +1,6 @@
 var db = require("../models/db.js");
 var Formidable = require('formidable');
+var jwt = require('jsonwebtoken');
 var dataCode = require('../uitl/dataCode.js');
 
 const {
@@ -33,6 +34,7 @@ exports.login = function(req, res, next) {
 						 .send({
 						...success,
 						result: result[0],
+						token: jwt.sign({ foo: 'bar' }, 'HelloKitty', { expiresIn: 60 * 60 }),
 					})
 				}
 			}

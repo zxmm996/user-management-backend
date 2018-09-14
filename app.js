@@ -1,6 +1,7 @@
 var express = require("express");
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
+var jwt = require('jsonwebtoken');
 // var FileStore = require('session-file-store')(session);
 
 var app = express();
@@ -24,9 +25,13 @@ app.all('*', function(req, res, next) {
     // Access-Control-Allow-Origin不可以为 '*'，因为 '*' 会和 Access-Control-Allow-Credentials:true 冲突，需配置指定的地址
     res.header("Access-Control-Allow-Origin", "http://192.168.19.84:8080");
     res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    next();
+    res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
+     /*让options请求快速返回*/
+    if(req.method=="OPTIONS") {
+      res.sendStatus(200);
+    } else {
+      next();
+    }
 });
 
 app.post("/login", router.login);
@@ -37,12 +42,31 @@ app.get('/logout', function(req, res) {
 })
 
 app.all('*', function(req, res, next) {
-   if (!req.session.user) {
-   	res.status(401);
-   	res.send('Forbidden');
-   } else {
-    next();
-   }
+  // token 登录认证
+  const token = req.headers['authorization'];
+  if (token) {
+    try {
+      var decoded = jwt.verify(token, 'HelloKitty');
+      if (decoded && decoded.foo && decoded.foo === 'bar') {
+        next();
+      }
+    } catch(err) {
+      // err
+      res.status(401);
+      res.send('Forbidden');
+    }
+  } else {
+    res.status(401);
+    res.send('Forbidden');
+  }
+  
+  // session 登录认证
+   // if (!req.session.user) {
+   // 	res.status(401);
+   // 	res.send('Forbidden');
+   // } else {
+   //  next();
+   // }
 });
 
 app.post("/addUser", router.addUser);
