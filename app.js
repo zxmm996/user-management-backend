@@ -1,3 +1,4 @@
+require('./models/db.js');
 var express = require("express");
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
@@ -20,13 +21,14 @@ app.use(session({
 // 允许跨域设置
 app.all('*', function(req, res, next) {
 		// 设置允许跨域携带cookie
-    res.header("Access-Control-Allow-Credentials", true);
+    // res.header("Access-Control-Allow-Credentials", true);
     // 设置允许跨域携带cookie后
     // Access-Control-Allow-Origin不可以为 '*'，因为 '*' 会和 Access-Control-Allow-Credentials:true 冲突，需配置指定的地址
-    res.header("Access-Control-Allow-Origin", "http://192.168.19.84:8080");
+    // res.header("Access-Control-Allow-Origin", "http://192.168.19.84:8080");
+    res.header("Access-Control-Allow-Origin", "*");
     res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
     res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
-     /*让options请求快速返回*/
+    // 让options请求快速返回
     if(req.method=="OPTIONS") {
       res.sendStatus(200);
     } else {
@@ -38,7 +40,10 @@ app.post("/login", router.login);
 app.get('/logout', function(req, res) {
   req.session.destroy();
   res.status(200)
-     .send('logout success');
+     .send({
+        code: 1,
+        result: 'logout success',
+     });
 })
 
 app.all('*', function(req, res, next) {
@@ -84,5 +89,5 @@ app.get("/getOrgList", router.getOrgList);
 app.get("/getOrgTree", router.getOrgTree);
 app.get("/getOrgInfoById", router.getOrgInfoById);
 
-app.listen(3000, '192.168.19.84');
-console.log('server running on port 3000')
+app.listen(3000, 'localhost');
+console.log('server running on port 3000');

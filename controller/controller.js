@@ -1,6 +1,7 @@
-var db = require("../models/db.js");
 var Formidable = require('formidable');
 var jwt = require('jsonwebtoken');
+var User = require('../models/User.js');
+var Organization = require('../models/Organization.js');
 var dataCode = require('../uitl/dataCode.js');
 
 const {
@@ -16,7 +17,7 @@ exports.login = function(req, res, next) {
 		const userName = fields.userName;
 		const password = fields.password;
 
-		db.checkUser({
+		User.checkUser({
 			userName,
 			password,
 		}, function(err, result) {
@@ -55,7 +56,7 @@ exports.addUser = function(req,res){
 		const userOrgId = fields.userOrgId;
 		const userPhoneNum = fields.userPhoneNum;
 
-		db.addUser({
+		User.addUser({
 			userNum,
 			userName,
 			userGender,
@@ -89,7 +90,7 @@ exports.updateUser = function(req, res) {
 		const userOrgId = fields.userOrgId;
 		const userPhoneNum = fields.userPhoneNum;
 
-		db.updateUser({
+		User.updateUser({
 			userId,
 			userNum,
 			userName,
@@ -113,7 +114,7 @@ exports.updateUser = function(req, res) {
 
 // 获取所有用户
 exports.getUserList = function(req,res){
-	db.getUserList(function(err, result) {
+	User.getUserList(function(err, result) {
 		if (err) {
 			res.send(error);
 		} else {
@@ -133,7 +134,7 @@ exports.getUserListByPage = function(req, res) {
 		page,
 		pageSize,
 	} = req.query;
-	db.getUserListByPage({
+	User.getUserListByPage({
 		orgId,
 		page: parseInt(page, 10),
 		pageSize: parseInt(pageSize, 10),
@@ -153,7 +154,7 @@ exports.getUserListByPage = function(req, res) {
 // 根据用户id获取用户信息
 exports.getUserInfoById = function(req,res){
 	const userId = req.query.userId;
-	db.getUserInfoById(userId, function(err, result) {
+	User.getUserInfoById(userId, function(err, result) {
 		if (err) {
 			res.send(error);
 		} else {
@@ -168,7 +169,7 @@ exports.getUserInfoById = function(req,res){
 // 根据用户id删除用户
 exports.deleteUser = function(req,res){
 	const userId = req.query.userId;
-	db.deleteUser(userId, function(err, result) {
+	User.deleteUser(userId, function(err, result) {
 		if (err) {
 			res.send(error);
 		} else {
@@ -183,7 +184,7 @@ exports.deleteUser = function(req,res){
 // 根据用户id批量删除用户
 exports.deleteUsers = function(req,res){
 	const userIds = req.query.userIds;
-	db.deleteUsers(userIds.split(';'), function(err, result) {
+	User.deleteUsers(userIds.split(';'), function(err, result) {
 		if (err) {
 			res.send(error);
 		} else {
@@ -206,7 +207,7 @@ exports.addOrganization = function(req, res) {
 			pId,
 		} = fields;
 
-		db.addOrganization({
+		Organization.addOrganization({
 			orgName,
 			orgType,
 			level: parseInt(level, 10) + 1,
@@ -227,7 +228,7 @@ exports.addOrganization = function(req, res) {
 // 删除组织机构
 exports.deleteOrganization= function(req, res) {
 	const orgId = req.query.orgId;
-	db.deleteOrganization(orgId, function(err, result) {
+	Organization.deleteOrganization(orgId, function(err, result) {
 		if (err) {
 			res.send(error);
 		} else if (result === 2){
@@ -252,7 +253,7 @@ exports.updateOrganization = function(req, res) {
 			orgId,
 			orgName,
 		} = fields;
-		db.updateOrganization({
+		Organization.updateOrganization({
 			orgId,
 			orgName,
 		}, function(err, result) {
@@ -270,7 +271,7 @@ exports.updateOrganization = function(req, res) {
 
 // 获取机构列表
 exports.getOrgList = function(req, res) {
-	db.getOrgList(function(err, result) {
+	Organization.getOrgList(function(err, result) {
 		if (err) {
 			res.send(error);
 		} else {
@@ -284,7 +285,7 @@ exports.getOrgList = function(req, res) {
 
 // 获取机构树
 exports.getOrgTree = function(req, res) {
-	db.getOrgTree(function(err, result) {
+	Organization.getOrgTree(function(err, result) {
 		if (err) {
 			res.send(error);
 		} else {
@@ -299,7 +300,7 @@ exports.getOrgTree = function(req, res) {
 // 根据机构id获取机构详情
 exports.getOrgInfoById = function(req, res) {
 	const orgId = req.query.orgId;
-	db.getOrgInfoById(orgId, function(err, result) {
+	Organization.getOrgInfoById(orgId, function(err, result) {
 		if (err) {
 			res.send(error);
 		} else {
