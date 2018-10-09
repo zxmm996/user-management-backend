@@ -3,6 +3,9 @@ var jwt = require('jsonwebtoken');
 var User = require('../models/User.js');
 var Organization = require('../models/Organization.js');
 var dataCode = require('../uitl/dataCode.js');
+var config = require('../config.js');
+
+const { secretKey } = config;
 
 const {
 	error,
@@ -35,7 +38,7 @@ exports.login = function(req, res, next) {
 						 .send({
 						...success,
 						result: result[0],
-						token: jwt.sign({ foo: 'bar' }, 'HelloKitty', { expiresIn: 60 * 60 }),
+						token: jwt.sign({ token: 'success' }, secretKey, { expiresIn: 60 * 60 }),
 					})
 				}
 			}

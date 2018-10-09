@@ -3,6 +3,8 @@ var express = require("express");
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var jwt = require('jsonwebtoken');
+var config = require('./config.js');
+const { ip, port, secretKey } = config;
 // var FileStore = require('session-file-store')(session);
 
 var app = express();
@@ -51,8 +53,8 @@ app.all('*', function(req, res, next) {
   const token = req.headers['authorization'];
   if (token) {
     try {
-      var decoded = jwt.verify(token, 'HelloKitty');
-      if (decoded && decoded.foo && decoded.foo === 'bar') {
+      var decoded = jwt.verify(token, secretKey);
+      if (decoded && decoded.token && decoded.token === 'success') {
         next();
       }
     } catch(err) {
@@ -89,5 +91,5 @@ app.get("/getOrgList", router.getOrgList);
 app.get("/getOrgTree", router.getOrgTree);
 app.get("/getOrgInfoById", router.getOrgInfoById);
 
-app.listen(3000, 'localhost');
-console.log('server running on port 3000');
+app.listen(port, ip);
+console.log(`server running at http://${ip}:${port}`);
