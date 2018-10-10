@@ -111,6 +111,26 @@ userSchema.statics.checkUser = function(payload, callback) {
 	}, callback);
 }
 
+// 数据库初始化 添加管理员用户
+User.find({
+	userNum: 'admin',
+}, function(err, result) {
+	if (err) {
+	} else {
+		if (result.length === 0) {
+			User.addUser({
+				userNum: 'admin',
+				userName: '管理员',
+				userGender: '1',
+				userBirthday: '1970-01-01',
+				userPwd: 'admin',
+				userOrgId: '',
+				userPhoneNum: '',
+				userOrgName: '',
+			})
+		}
+	}
+})
 
 var User = mongoose.model('user', userSchema);
 module.exports = User;
