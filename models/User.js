@@ -64,6 +64,10 @@ userSchema.statics.getUserListByPage = function(payload, callback) {
 	User.find(conditions, null, { skip: pageSize * (page - 1), limit: pageSize })
 		.populate('userOrgName', 'orgName -_id')
 		.exec(function(err, result) {
+			if (!result) {
+				callback(err,[],0);
+				return;
+			}
       	User.countDocuments(null, function(err, count) {
 					if (err) {
 						callback(err);
@@ -111,6 +115,7 @@ userSchema.statics.checkUser = function(payload, callback) {
 	}, callback);
 }
 
+var User = mongoose.model('user', userSchema);
 // 数据库初始化 添加管理员用户
 User.find({
 	userNum: 'admin',
@@ -127,12 +132,12 @@ User.find({
 				userOrgId: '',
 				userPhoneNum: '',
 				userOrgName: '',
+			}, function(err, result) {
+
 			})
 		}
 	}
 })
-
-var User = mongoose.model('user', userSchema);
 module.exports = User;
 
 

@@ -68,4 +68,22 @@ organizationSchema.statics.getOrgInfoById = function(orgId, callback) {
 }
 
 var Organization = mongoose.model('organization', organizationSchema);
+// 数据库初始化 添加管理员用户
+Organization.find({
+	pId: '-1',
+}, function(err, result) {
+	if (err) {
+	} else {
+		if (result.length === 0) {
+			Organization.addOrganization({
+				orgName : "全体人员",
+			    orgType : "1",
+			    level : 0,
+			    pId : "-1",
+			}, function(err, result) {
+				
+			})
+		}
+	}
+})
 module.exports = Organization;

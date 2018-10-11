@@ -39,14 +39,14 @@ app.all('*', function(req, res, next) {
 });
 
 app.post("/login", router.login);
-app.get('/logout', function(req, res) {
-  req.session.destroy();
-  res.status(200)
-     .send({
-        code: 1,
-        result: 'logout success',
-     });
-})
+// app.get('/logout', function(req, res) {
+//   req.session.destroy();
+//   res.status(200)
+//      .send({
+//         code: 1,
+//         result: 'logout success',
+//      });
+// })
 
 app.all('*', function(req, res, next) {
   // token 登录认证
