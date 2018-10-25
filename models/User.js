@@ -18,7 +18,6 @@ var userSchema = mongoose.Schema({
 
 // 静态方法，添加用户
 userSchema.statics.addUser = function(payload, callback){
-	// 用new关键字来实例化一个对象
 	var user = new User({
 		userNum: payload.userNum,
 		userName: payload.userName,
@@ -29,7 +28,6 @@ userSchema.statics.addUser = function(payload, callback){
 		userPhoneNum: payload.userPhoneNum,
 		userOrgName: payload.userOrgId,
 	});
-	// 持久化，在数据库中保存
 	user.save(function(err,result){
 		callback(err, result);
 	});
